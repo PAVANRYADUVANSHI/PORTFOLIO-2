@@ -2,16 +2,17 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Marquee from 'react-fast-marquee';
-import { FaReact, FaServer, FaCube, FaCloud } from 'react-icons/fa';
+import { FaReact, FaServer, FaCubes, FaCloud } from 'react-icons/fa';
 import { whatIDo, skills } from '../data';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const iconMap: Record<string, React.ReactNode> = {
-  FaReact: <FaReact />,
-  FaServer: <FaServer />,
-  FaCube: <FaCube />,
-  FaCloud: <FaCloud />,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const iconMap: Record<string, React.ElementType<any>> = {
+  FaReact,
+  FaServer,
+  FaCube: FaCubes,
+  FaCloud,
 };
 
 export default function WhatIDo() {
@@ -37,13 +38,16 @@ export default function WhatIDo() {
       <div className="glow-line" />
 
       <div className="whatido-grid">
-        {whatIDo.map((service) => (
-          <div key={service.title} className="service-card">
-            <div className="service-icon">{iconMap[service.icon] ?? <FaReact />}</div>
-            <h3 className="service-title">{service.title}</h3>
-            <p className="service-desc">{service.description}</p>
-          </div>
-        ))}
+        {whatIDo.map((service) => {
+          const Icon = (iconMap[service.icon] ?? FaReact) as React.ElementType<Record<string, unknown>>;
+          return (
+            <div key={service.title} className="service-card">
+              <div className="service-icon"><Icon /></div>
+              <h3 className="service-title">{service.title}</h3>
+              <p className="service-desc">{service.description}</p>
+            </div>
+          );
+        })}
       </div>
 
       <div className="skills-marquee" style={{ marginTop: '4rem' }}>
