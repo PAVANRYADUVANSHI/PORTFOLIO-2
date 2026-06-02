@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Marquee from 'react-fast-marquee';
+import MarqueeLib from 'react-fast-marquee';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Marquee = (MarqueeLib as any).default ?? MarqueeLib;
 import { FaReact, FaServer, FaCubes, FaCloud } from 'react-icons/fa';
 import { whatIDo, skills } from '../data';
 
