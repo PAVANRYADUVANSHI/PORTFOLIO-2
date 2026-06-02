@@ -16,14 +16,6 @@ import Footer from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── DROP YOUR SEQUENCE FRAMES HERE ────────────────────────────────────────
-// If you have frames from Google Whisk → ezgif, import them like:
-//   import f001 from './assets/sequence/frame_001.webp';
-//   const FRAMES = [f001, f002, ...];
-// For now, leave empty — the animated gradient fallback will show.
-const FRAMES: string[] = [];
-// ────────────────────────────────────────────────────────────────────────────
-
 export default function App() {
   useEffect(() => {
     ScrollTrigger.refresh();
@@ -34,7 +26,7 @@ export default function App() {
       <Cursor />
       <Navbar />
       <main>
-        <ScrollyHero frames={FRAMES} />
+        <ScrollyHero />
         <About />
         <WhatIDo />
         <Career />

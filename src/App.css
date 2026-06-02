@@ -143,18 +143,8 @@
   font-size: 8rem;
   position: relative;
   overflow: hidden;
+  padding: 3px;
 }
-.about-image-frame::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  background: var(--surface);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.about-image-frame .emoji { position: relative; z-index: 1; }
 .about-corner {
   position: absolute;
   width: 24px; height: 24px;
