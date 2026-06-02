@@ -1,8 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Stars, OrbitControls } from '@react-three/drei';
-import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postprocessing';
-import { BlendFunction } from 'postprocessing';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
 function FloatingSphere() {
@@ -14,7 +13,7 @@ function FloatingSphere() {
   });
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1.5}>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
+      <mesh ref={meshRef}>
         <icosahedronGeometry args={[1.4, 4]} />
         <MeshDistortMaterial
           color="#6c63ff"
@@ -24,14 +23,17 @@ function FloatingSphere() {
           speed={2}
           roughness={0.1}
           metalness={0.8}
-          wireframe={false}
         />
       </mesh>
     </Float>
   );
 }
 
-function FloatingRing({ position, rotation, color }: { position: [number,number,number]; rotation: [number,number,number]; color: string }) {
+function FloatingRing({ position, rotation, color }: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  color: string;
+}) {
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
     if (ref.current) ref.current.rotation.z = clock.getElapsedTime() * 0.4;
@@ -46,14 +48,16 @@ function FloatingRing({ position, rotation, color }: { position: [number,number,
 
 function ParticleField() {
   const count = 200;
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
+  const geo = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      positions[i * 3]     = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
     }
-    return arr;
+    g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return g;
   }, []);
 
   const ref = useRef<THREE.Points>(null);
@@ -62,10 +66,7 @@ function ParticleField() {
   });
 
   return (
-    <points ref={ref}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
+    <points ref={ref} geometry={geo}>
       <pointsMaterial size={0.025} color="#00d4ff" transparent opacity={0.6} />
     </points>
   );
@@ -99,18 +100,7 @@ export default function HeroScene() {
       />
 
       <EffectComposer>
-        <Bloom
-          intensity={1.2}
-          luminanceThreshold={0.3}
-          luminanceSmoothing={0.9}
-          blendFunction={BlendFunction.ADD}
-        />
-        <ChromaticAberration
-          blendFunction={BlendFunction.NORMAL}
-          offset={[0.0005, 0.0005]}
-          radialModulation={false}
-          modulationOffset={0}
-        />
+        <Bloom intensity={1.2} luminanceThreshold={0.3} luminanceSmoothing={0.9} />
       </EffectComposer>
     </Canvas>
   );

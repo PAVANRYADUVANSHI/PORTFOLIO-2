@@ -1,2 +1,3 @@
 @echo off
-npm run dev
+echo Starting Portfolio 2...
+start "Portfolio-2" cmd /k "cd /d "%~dp0" && npm run dev -- --open"
